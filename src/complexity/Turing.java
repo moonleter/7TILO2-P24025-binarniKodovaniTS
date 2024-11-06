@@ -186,7 +186,6 @@ public class Turing {
             // Dynamically build configuration for multiple or single tape
             StringBuilder configBuilder = new StringBuilder();
 
-            // Symbols section
             configBuilder.append("(");
             for (int i = 0; i < tapesNumber; i++) {
                 configBuilder.append(configurations.get(i * 2)); // Symbol
@@ -196,7 +195,6 @@ public class Turing {
             }
             configBuilder.append("); (");
 
-            // Directions section
             for (int i = 0; i < tapesNumber; i++) {
                 configBuilder.append(configurations.get(i * 2 + 1)); // Direction
                 if (i < tapesNumber - 1) {
@@ -205,7 +203,7 @@ public class Turing {
             }
             configBuilder.append(")");
 
-            String formattedConfig = configBuilder.toString(); // Exclude newState here
+            String formattedConfig = configBuilder.toString(); // Exclude newState
 
             processTransition(tapes, heads, newState, formattedConfig, output, yetExecuted);
         }
@@ -236,43 +234,35 @@ public class Turing {
         String[] newTapes = Arrays.copyOf(tapes, tapes.length);
         int[] newHeads = Arrays.copyOf(heads, heads.length);
 
-        // Ensure newConfig is correctly formatted with two sections: one for symbols, one for directions
         if (!newConfig.startsWith("(") || !newConfig.endsWith(")")) {
             throw new TuringException("Malformed configuration: " + newConfig);
         }
 
-        // Remove outer parentheses and split the configuration into symbol and direction sections
         String[] sections = newConfig.substring(1, newConfig.length() - 1).split("\\); \\(");
         if (sections.length != 2) {
             throw new TuringException("Configuration must contain exactly two parts: " + newConfig);
         }
 
-        // Parse symbols and directions
         String[] symbols = sections[0].split("\\s*,\\s*");
         String[] directions = sections[1].split("\\s*,\\s*");
 
-        // Check for a mismatch in the number of symbols and tapes
         if (symbols.length != tapes.length || directions.length != tapes.length) {
             throw new TuringException("Mismatch between number of tapes and actions in configuration: " + newConfig);
         }
 
-        // Process each tape's symbol and direction
         for (int i = 0; i < tapes.length; i++) {
             char newChar = symbols[i].charAt(0);
             char direction = directions[i].charAt(0);
 
-            // Validate direction
             if (direction != RIGHT_DIRECTION && direction != LEFT_DIRECTION && direction != STOP_DIRECTION) {
                 throw new TuringException("Invalid direction: " + direction);
             }
 
-            // Modify the tape content based on the new symbol
             if (newHeads[i] < 0 || newHeads[i] >= newTapes[i].length()) {
                 throw new TuringException("Invalid head position for tape " + i + ": " + newHeads[i]);
             }
             newTapes[i] = newTapes[i].substring(0, newHeads[i]) + newChar + newTapes[i].substring(newHeads[i] + 1);
 
-            // Move the head based on the direction
             moveHead(newHeads, i, direction);
         }
 

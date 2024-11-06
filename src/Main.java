@@ -16,7 +16,7 @@ public class Main {
          * If the input file is in text format, it will be read directly, but you HAVE TO set isBinaryFile to false.
          *
          */
-        String inputFilePath = "src/complexity/homeWork03InBinary.txt";
+        String inputFilePath = "src/complexity/homeWork04InBinary.txt";
         boolean isBinaryFile = true;
 
         // Path to save the converted text file, if the input file is in binary format:
