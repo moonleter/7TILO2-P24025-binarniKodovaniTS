@@ -13,4 +13,13 @@ public class BinaryTSConverter {
         }
         return text.toString();
     }
+
+    public static String getEncodedTuringMachineStructure(String turingMachineText) {
+        StringBuilder binaryString = new StringBuilder();
+        for (char c : turingMachineText.toCharArray()) {
+            String binary = String.format("%8s", Integer.toBinaryString(c)).replace(' ', '0');
+            binaryString.append(binary);
+        }
+        return binaryString.toString();
+    }
 }
