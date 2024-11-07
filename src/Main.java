@@ -47,11 +47,12 @@ public class Main {
         try {
             machine = new Turing(inputFilePath);
             outputs = machine.run(true);
-            System.out.println(outputs);
-
             if (!outputs.isEmpty()) {
-                String specificOutput = outputs.get(outputs.size() - 1).toString();
-                System.out.println("Final Output is: " + specificOutput);
+                String specificOutput = outputs.getLast().toString();
+                System.out.println("Final State of Tapes is: " + specificOutput);
+                System.out.println("Final Output is: " + machine.getLastTapeOutput());
+                System.out.println("Total Steps (Time Complexity): " + machine.getStepCount());
+                System.out.println("Total Length Used (Space Complexity): " + machine.getMaxTapeLength());
             }
         } catch (IOException | TuringException e) {
             System.out.println(e);

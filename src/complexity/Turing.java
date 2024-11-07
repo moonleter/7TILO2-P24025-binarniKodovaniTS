@@ -45,6 +45,8 @@ public class Turing {
     private final int tapesNumber;
     private final Map<String, Map<String, Map<String, List<String>>>> relations = new HashMap<>();
     private int stepCount = 0;
+    private int maxTapeLength = 0;
+    private String lastTapeContent;
 
     public Turing(String filePath) throws IOException, TuringException {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -263,10 +265,13 @@ public class Turing {
             }
             newTapes[i] = newTapes[i].substring(0, newHeads[i]) + newChar + newTapes[i].substring(newHeads[i] + 1);
 
+            // Move the head based on the direction
             moveHead(newHeads, i, direction);
         }
 
         stepCount++;
+        updateMaxTapeLength(newTapes);
+        updateLastTapeContent(newTapes);
         run(newTapes, newHeads, newState, output, yetExecuted);
     }
 
@@ -289,6 +294,28 @@ public class Turing {
 
     public int getStepCount() {
         return stepCount;
+    }
+
+    public int getMaxTapeLength() {
+        return maxTapeLength;
+    }
+
+    private void updateMaxTapeLength(String[] tapes) {
+        int currentTotalLength = 0;
+        for (String tape : tapes) {
+            currentTotalLength += tape.length();
+        }
+        if (currentTotalLength > maxTapeLength) {
+            maxTapeLength = currentTotalLength;
+        }
+    }
+
+    private void updateLastTapeContent(String[] tapes) {
+        lastTapeContent = tapes[tapes.length - 1]; // Save the last tape's content
+    }
+
+    public String getLastTapeOutput() {
+        return lastTapeContent;
     }
 
     public static final class TuringException extends RuntimeException {
